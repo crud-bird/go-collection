@@ -142,7 +142,7 @@ func (q *IQueue) Dequeue() (interface{}, error) {
 //Dequeue 出队
 func (cq *CQueue) Dequeue() (interface{}, error) {
 	cq.mtx.Lock()
-	cq.mtx.Unlock()
+	defer cq.mtx.Unlock()
 
 	return cq.q.Dequeue()
 }

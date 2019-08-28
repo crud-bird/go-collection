@@ -1,7 +1,7 @@
 package queue_test
 
 import (
-	"algorithm/structure/queue"
+	"go-collection/queue"
 	"testing"
 )
 

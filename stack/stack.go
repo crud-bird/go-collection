@@ -8,7 +8,8 @@ import (
 //Stack 栈
 type Stack interface {
 	Len() int
-	IsEmpty()
+	IsEmpty() bool
+	Next() interface{}
 	Push(v interface{}) interface{}
 	Pop() interface{}
 }
@@ -24,7 +25,7 @@ type IStack struct {
 	lenth int
 }
 
-//CStack ...
+//CStack 适用于并发条件的栈
 type CStack struct {
 	s   IStack
 	mtx *sync.RWMutex
@@ -70,7 +71,20 @@ func (cs *CStack) IsEmpty() bool {
 	cs.mtx.RLock()
 	defer cs.mtx.RUnlock()
 
-	return cs.IsEmpty()
+	return cs.s.IsEmpty()
+}
+
+//Next 查询下一个弹出的数据，调用此函数后数据仍在栈中
+func (s *IStack) Next() interface{} {
+	return s.top.v
+}
+
+//Next 查询下一个弹出的数据，调用此函数后数据仍在栈中
+func (cs *CStack) Next() interface{} {
+	cs.mtx.RLock()
+	defer cs.mtx.RUnlock()
+
+	return cs.s.Next()
 }
 
 //Push 压栈
